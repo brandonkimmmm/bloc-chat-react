@@ -25,7 +25,7 @@ class MessageList extends Component {
         {
           this.state.messages.map( (message, index) =>
             <div className="message" key={index}>
-              {message.message}
+              {message.content}
             </div>
           )
         }

@@ -21,15 +21,13 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeRoom: "room1",
-      activeIndex: 1
+      activeRoom: "room6",
+      activeIndex: "-LDfGEUA_2FWPsAzBqp-"
     }
   }
 
   changeActiveRoom(name, key) {
-    console.log(key);
-    this.setState({ activeRoom: name });
-    this.setState({ activeIndex: key });
+    this.setState({ activeRoom: name, activeIndex: key });
   }
 
   render() {
