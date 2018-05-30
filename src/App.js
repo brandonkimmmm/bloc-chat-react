@@ -3,6 +3,8 @@ import { Route, Link } from 'react-router-dom';
 import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
+import MessageList from './components/MessageList';
+
 
 // Initialize Firebase
 var config = {
@@ -16,6 +18,20 @@ var config = {
 firebase.initializeApp(config);
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      activeRoom: "room1",
+      activeIndex: 1
+    }
+  }
+
+  changeActiveRoom(name, key) {
+    console.log(key);
+    this.setState({ activeRoom: name });
+    this.setState({ activeIndex: key });
+  }
+
   render() {
     return (
       <div className="App">
@@ -23,7 +39,8 @@ class App extends Component {
           <h1>Bloc Chat</h1>
         </header>
         <main>
-          <RoomList firebase={ firebase }/>
+          <RoomList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}/>
+          <MessageList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex}/>
         </main>
       </div>
     );
