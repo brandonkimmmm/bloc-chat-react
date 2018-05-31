@@ -25,7 +25,7 @@ class MessageList extends Component {
         {
           this.props.activeMessages.map( (message, index) =>
             <div className="message" key={index}>
-              {message.content}
+              {message.content} 
             </div>
           )
         }

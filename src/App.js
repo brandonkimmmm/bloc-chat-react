@@ -26,21 +26,26 @@ class App extends Component {
       activeIndex: "1",
       messages: [],
       activeMessages:[],
-      user: '',
+      user: 'Guest',
     }
 
     this.messagesRef = firebase.database().ref('messages');
   }
 
   componentDidMount() {
-    this.messagesRef.orderByChild('roomId').on('child_added', snapshot => {
+    this.messagesRef.on('child_added', snapshot => {
       const message = snapshot.val();
       message.key = snapshot.key;
       this.setState({ messages: this.state.messages.concat( message ) });
       if (message.roomId == this.state.activeIndex) {
         this.setState({ activeMessages: this.state.activeMessages.concat( message ) });
       }
-      console.log(message);
+    });
+
+    this.messagesRef.on('child_removed', snapshot => {
+      let messageArr = this.state.messages;
+      messageArr = messageArr.filter( message => snapshot.val().roomId !== message.roomId );
+      this.setState({ messages: messageArr });
     });
   }
 
@@ -72,6 +77,20 @@ class App extends Component {
     })
   }
 
+  deleteRoomMessages(key) {
+    var query = this.messagesRef.orderByChild("roomId").equalTo(key);
+    query.once("value", function(snapshot) {
+       snapshot.forEach(function(itemSnapshot) {
+           itemSnapshot.ref.remove();
+       });
+    });
+
+    //IF ACTIVE ROOM IS DELETED, CLEAR THE ACTIVE MESSAGES
+    if(key === this.state.activeIndex) {
+      this.setState({ activeMessages: [] });
+    }
+  }
+
   render() {
     return (
       <div className="App">
@@ -79,8 +98,21 @@ class App extends Component {
           <h1>Bloc Chat</h1>
         </header>
         <main>
-          <RoomList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}/>
-          <MessageList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} activeMessages={this.state.activeMessages} createMessage={(e, message) => this.createMessage(e, message)}/>
+          <RoomList
+            firebase={ firebase }
+            activeRoom={this.state.activeRoom}
+            activeIndex={this.state.activeIndex}
+            user={this.state.user}
+            changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
+            deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
+          />
+          <MessageList
+            firebase={ firebase }
+            activeRoom={this.state.activeRoom}
+            activeIndex={this.state.activeIndex}
+            activeMessages={this.state.activeMessages}
+            createMessage={(e, message) => this.createMessage(e, message)}
+          />
           <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
         </main>
       </div>
