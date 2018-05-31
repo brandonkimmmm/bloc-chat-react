@@ -4,7 +4,18 @@ class MessageList extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      newMessage: ''
     };
+  }
+
+  createMessage(e, message) {
+    e.preventDefault();
+    this.props.createMessage(e, message);
+    this.setState({ newMessage: '' });
+  }
+
+  handleChange(event) {
+    this.setState({ newMessage: event.target.value });
   }
 
   render() {
@@ -18,6 +29,10 @@ class MessageList extends Component {
             </div>
           )
         }
+        <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
+          <input className="newMessage" type="text" placeholder="Enter your message" value={this.state.newMessage} onChange={ (e) => this.handleChange(e) }></input>
+          <input type="submit" value="Submit"></input>
+        </form>
       </section>
     )
   }

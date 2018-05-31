@@ -40,6 +40,7 @@ class App extends Component {
       if (message.roomId == this.state.activeIndex) {
         this.setState({ activeMessages: this.state.activeMessages.concat( message ) });
       }
+      console.log(message);
     });
   }
 
@@ -53,6 +54,24 @@ class App extends Component {
     this.setState({ user: user });
   }
 
+  createMessage(e, message) {
+    e.preventDefault();
+    if (!message) { return }
+    let activeUser = '';
+    if (this.state.user === null) {
+      activeUser = 'Guest';
+    } else {
+      activeUser = this.state.user.displayName;
+    }
+
+    this.messagesRef.push({
+      content: message,
+      user: activeUser,
+      roomId: this.state.activeIndex,
+      sentAt: firebase.database.ServerValue.TIMESTAMP
+    })
+  }
+
   render() {
     return (
       <div className="App">
@@ -61,7 +80,7 @@ class App extends Component {
         </header>
         <main>
           <RoomList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}/>
-          <MessageList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} activeMessages={this.state.activeMessages}/>
+          <MessageList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} activeMessages={this.state.activeMessages} createMessage={(e, message) => this.createMessage(e, message)}/>
           <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
         </main>
       </div>
