@@ -21,13 +21,30 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeRoom: "room6",
-      activeIndex: "-LDfGEUA_2FWPsAzBqp-"
+      activeRoom: "room1",
+      activeIndex: "1",
+      messages: [],
+      activeMessages:[]
     }
+
+    this.messagesRef = firebase.database().ref('messages');
+  }
+
+  componentDidMount() {
+    this.messagesRef.orderByChild('roomId').on('child_added', snapshot => {
+      const message = snapshot.val();
+      message.key = snapshot.key;
+      this.setState({ messages: this.state.messages.concat( message ) });
+      if (message.roomId == this.state.activeIndex) {
+        this.setState({ activeMessages: this.state.activeMessages.concat( message ) });
+      }
+    });
   }
 
   changeActiveRoom(name, key) {
     this.setState({ activeRoom: name, activeIndex: key });
+    const arr = this.state.messages.filter( message => message.roomId == key );
+    this.setState({ activeMessages: arr });
   }
 
   render() {
@@ -38,7 +55,7 @@ class App extends Component {
         </header>
         <main>
           <RoomList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}/>
-          <MessageList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex}/>
+          <MessageList firebase={ firebase } activeRoom={this.state.activeRoom} activeIndex={this.state.activeIndex} activeMessages={this.state.activeMessages}/>
         </main>
       </div>
     );
