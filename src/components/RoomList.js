@@ -6,7 +6,7 @@ class RoomList extends Component {
     super(props);
     this.state = {
       rooms: [],
-      newRoom: ""
+      newRoom: "",
     };
 
     this.roomsRef = this.props.firebase.database().ref('rooms');
@@ -47,8 +47,6 @@ class RoomList extends Component {
   }
 
   deleteRoom(room) {
-    console.log(room.key);
-    console.log(room.user);
     if(this.props.user !== null && this.props.user.displayName !== room.user) {
       alert("Need to be room creator");
       return;
@@ -61,6 +59,37 @@ class RoomList extends Component {
     this.roomsRef.child(room.key).remove();
   }
 
+  renameRoom(e, user, key) {
+    e.preventDefault();
+    if (this.props.user !== null && user !== this.props.user.displayName) {
+      alert('Need to be room creator');
+      return;
+    } else if (this.props.user === null && user !== 'Guest') {
+      alert('Need to be room creator');
+      return;
+    }
+    let newName = prompt('Please enter new room name', '');
+    if (newName === null) { return }
+    if (newName.length === 0) {
+      alert('Enter valid name');
+      while (newName.length === 0)
+      newName = prompt('Please enter new room name', '');
+    };
+
+    let query = this.roomsRef.orderByKey().equalTo(key);
+    query.once('child_added', snapshot => {
+      snapshot.ref.update({ name: newName })
+    });
+    let updatedRooms = this.state.rooms.map( room => {
+      if (room.key === key) {
+        room.name = newName;
+      }
+      return room;
+    });
+    this.setState({ rooms: updatedRooms });
+    if (this.props.activeIndex === key) { this.props.changeActiveRoom(newName, key) };
+  }
+
   render() {
     return (
       <section className="roomList">
@@ -68,7 +97,8 @@ class RoomList extends Component {
           this.state.rooms.map( (room, index) =>
             <div className="room" key={index}>
               <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
-              <input type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
+              <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.user, room.key)}></input>
+              <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
             </div>
           )
         }

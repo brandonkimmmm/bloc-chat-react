@@ -104,7 +104,6 @@ class App extends Component {
             changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
             deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
           />
-          {console.log(this.state.user)}
           <MessageList
             firebase={ firebase }
             activeRoom={this.state.activeRoom}
