@@ -25,9 +25,16 @@ class RoomList extends Component {
 
   createRoom(e) {
     e.preventDefault();
-    if (!this.state.newRoom) { return }
+    if(!this.state.newRoom) { return }
+    let user = '';
+    if(this.props.user === null) {
+      user = 'Guest';
+    } else {
+      user = this.props.user.displayName;
+    }
     this.roomsRef.push({
-      name: this.state.newRoom
+      name: this.state.newRoom,
+      user: user
     });
   }
 
@@ -39,9 +46,19 @@ class RoomList extends Component {
     this.props.changeActiveRoom(name, key);
   }
 
-  deleteRoom(key) {
-    this.props.deleteRoomMessages(key);
-    this.roomsRef.child(key).remove();
+  deleteRoom(room) {
+    console.log(room.key);
+    console.log(room.user);
+    if(this.props.user !== null && this.props.user.displayName !== room.user) {
+      alert("Need to be room creator");
+      return;
+
+    } else if (this.props.user === null && room.user !== 'Guest') {
+      alert("Need to be room creator");
+      return;
+    }
+    this.props.deleteRoomMessages(room.key);
+    this.roomsRef.child(room.key).remove();
   }
 
   render() {
@@ -51,7 +68,7 @@ class RoomList extends Component {
           this.state.rooms.map( (room, index) =>
             <div className="room" key={index}>
               <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
-              <input type="button" value="Delete" onClick={(e) => this.deleteRoom(room.key)}></input>
+              <input type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
             </div>
           )
         }

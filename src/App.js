@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import { Route, Link } from 'react-router-dom';
 import './App.css';
 import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
@@ -26,7 +25,7 @@ class App extends Component {
       activeIndex: "1",
       messages: [],
       activeMessages:[],
-      user: 'Guest',
+      user: null,
     }
 
     this.messagesRef = firebase.database().ref('messages');
@@ -68,7 +67,6 @@ class App extends Component {
     } else {
       activeUser = this.state.user.displayName;
     }
-
     this.messagesRef.push({
       content: message,
       user: activeUser,
@@ -106,6 +104,7 @@ class App extends Component {
             changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
             deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
           />
+          {console.log(this.state.user)}
           <MessageList
             firebase={ firebase }
             activeRoom={this.state.activeRoom}

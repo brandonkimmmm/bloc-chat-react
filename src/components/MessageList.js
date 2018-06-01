@@ -25,12 +25,16 @@ class MessageList extends Component {
         {
           this.props.activeMessages.map( (message, index) =>
             <div className="message" key={index}>
-              {message.content} 
+              {message.content}
             </div>
           )
         }
         <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
-          <input className="newMessage" type="text" placeholder="Enter your message" value={this.state.newMessage} onChange={ (e) => this.handleChange(e) }></input>
+          <input className="newMessage"
+            type="text"
+            placeholder="Enter your message"
+            value={this.state.newMessage}
+            onChange={ (e) => this.handleChange(e) }></input>
           <input type="submit" value="Submit"></input>
         </form>
       </section>
