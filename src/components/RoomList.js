@@ -25,17 +25,29 @@ class RoomList extends Component {
 
   createRoom(e) {
     e.preventDefault();
-    if(!this.state.newRoom) { return }
+    if(!this.state.newRoom) {
+      alert('Enter Valid Name');
+      return
+    }
     let user = '';
     if(this.props.user === null) {
       user = 'Guest';
     } else {
       user = this.props.user.displayName;
     }
+    let newRoomName = this.state.newRoom;
     this.roomsRef.push({
-      name: this.state.newRoom,
+      name: newRoomName,
       user: user
     });
+
+    let key = '';
+    let newRoom = this.roomsRef.orderByChild("name").equalTo(newRoomName);
+    console.log(newRoomName);
+    newRoom.once('value', snapshot => {
+      key = Object.keys(snapshot.val())[0];
+    });
+    this.props.changeActiveRoom(this.state.newRoom, key);
   }
 
   handleChange(event) {
