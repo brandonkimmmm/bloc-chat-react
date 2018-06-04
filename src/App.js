@@ -133,13 +133,13 @@ class App extends Component {
     query.once('child_added', snapshot => {
       snapshot.ref.update({ content: editedMessage })
     });
-    let updatedMessage = this.state.messages.map( messages => {
-      if (messages.key === message.key) {
-        messages.content = editedMessage;
+    let updatedMessages = this.state.messages.map( newMessage => {
+      if (newMessage.key === message.key) {
+        newMessage.content = editedMessage;
       }
-      return messages;
+      return newMessage;
     });
-    this.setState({ rooms: updatedMessage });
+    this.setState({messages: updatedMessages})
   }
 
   render() {
