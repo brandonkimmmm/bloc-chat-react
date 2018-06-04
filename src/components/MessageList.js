@@ -51,14 +51,16 @@ class MessageList extends Component {
             </div>
           )
         }
-        <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
-          <input className="newMessage"
-            type="text"
-            placeholder="Enter your message"
-            value={this.state.newMessage}
-            onChange={ (e) => this.handleChange(e) }></input>
-          <input type="submit" value="Submit"></input>
-        </form>
+        {this.props.activeIndex !== '' &&
+          <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
+            <input className="newMessage"
+              type="text"
+              placeholder="Enter your message"
+              value={this.state.newMessage}
+              onChange={ (e) => this.handleChange(e) }></input>
+            <input type="submit" value="Submit"></input>
+          </form>
+        }
       </section>
     )
   }

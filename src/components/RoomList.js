@@ -57,6 +57,9 @@ class RoomList extends Component {
     }
     this.props.deleteRoomMessages(room.key);
     this.roomsRef.child(room.key).remove();
+    if (room.key === this.props.activeIndex) {
+      this.props.changeActiveRoom('Please Select Room', '');
+    }
   }
 
   renameRoom(e, user, key) {

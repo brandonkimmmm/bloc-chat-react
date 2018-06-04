@@ -21,8 +21,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      activeRoom: "room1",
-      activeIndex: "1",
+      activeRoom: "Please Select Room",
+      activeIndex: '',
       messages: [],
       activeMessages:[],
       user: null,
@@ -100,6 +100,14 @@ class App extends Component {
 
   deleteSingleMessage(message) {
     this.messagesRef.child(message.key).remove();
+
+    // UPDATE ACTIVE MESSSAGES, GET RID OF DELETED MESSAGE
+    if(message.roomId === this.state.activeIndex) {
+      let newActive = this.state.activeMessages.filter( messages => {
+        return messages.key !== message.key;
+      });
+      this.setState({ activeMessages: newActive });
+    }
   }
 
   render() {
