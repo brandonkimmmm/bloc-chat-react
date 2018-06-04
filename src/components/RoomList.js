@@ -87,8 +87,11 @@ class RoomList extends Component {
     if (newName === null) { return }
     if (newName.length === 0) {
       alert('Enter valid name');
-      while (newName.length === 0)
-      newName = prompt('Please enter new room name', '');
+      while (newName.length === 0) {
+        newName = prompt('Please enter new room name', '');
+        if (newName === null) {return}
+        if (newName.length === 0) { alert('Enter valid name')}
+      }
     };
 
     let query = this.roomsRef.orderByKey().equalTo(key);

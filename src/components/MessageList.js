@@ -10,7 +10,7 @@ class MessageList extends Component {
 
   createMessage(e, message) {
     e.preventDefault();
-    this.props.createMessage(e, message);
+    this.props.createMessage(message);
     this.setState({ newMessage: '' });
   }
 
@@ -18,7 +18,8 @@ class MessageList extends Component {
     this.setState({ newMessage: event.target.value });
   }
 
-  deleteMessage(message) {
+  deleteMessage(e, message) {
+    e.preventDefault();
     if(this.props.user !== null && this.props.user.displayName !== message.user) {
       alert("Need to be room creator");
       return;
@@ -35,6 +36,19 @@ class MessageList extends Component {
     return myDate.toDateString() + ' @ ' + myDate.getHours() + ':' + myDate.getMinutes();
   }
 
+  editMessage(e, message) {
+    e.preventDefault();
+    if(this.props.user !== null && this.props.user.displayName !== message.user) {
+      alert("Need to be message creator");
+      return;
+
+    } else if (this.props.user === null && message.user !== 'Guest') {
+      alert("Need to be messages creator");
+      return;
+    }
+    this.props.editMessage(message);
+  }
+
   render() {
     return (
       <section className="messageList">
@@ -46,7 +60,8 @@ class MessageList extends Component {
               <span className="time">{this.formatTime(message.sentAt)}</span>
               <div className="content">
                 {message.content}
-                <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(message)}></input>
+                <input className="renameButton" type='button' value='Edit' onClick={(e) => this.editMessage(e, message)}></input>
+                <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(e, message)}></input>
               </div>
             </div>
           )

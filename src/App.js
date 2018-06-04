@@ -60,8 +60,7 @@ class App extends Component {
     this.setState({ user: user });
   }
 
-  createMessage(e, message) {
-    e.preventDefault();
+  createMessage(message) {
     if (!message) { return }
     let activeUser = '';
     if (this.state.user === null) {
@@ -110,6 +109,39 @@ class App extends Component {
     }
   }
 
+  editMessage(message) {
+    if (this.state.user !== null && message.user !== this.state.user.displayName) {
+      alert('Need to be message creator');
+      return;
+    } else if (this.state.user === null && message.user !== 'Guest') {
+      alert('Need to be message creator');
+      return;
+    }
+
+    let editedMessage = prompt('Please edit the message.', message.content);
+    if (editedMessage === null) { return }
+    if (editedMessage.length === 0) {
+      alert('Enter valid message');
+      while (editedMessage.length === 0) {
+        editedMessage = prompt('Please edit the message.', message.content);
+        if (editedMessage === null) {return}
+        if (editedMessage.length === 0) { alert('Enter valid message')}
+      }
+    };
+
+    let query = this.messagesRef.orderByKey().equalTo(message.key);
+    query.once('child_added', snapshot => {
+      snapshot.ref.update({ content: editedMessage })
+    });
+    let updatedMessage = this.state.messages.map( messages => {
+      if (messages.key === message.key) {
+        messages.content = editedMessage;
+      }
+      return messages;
+    });
+    this.setState({ rooms: updatedMessage });
+  }
+
   render() {
     return (
       <div className="App">
@@ -131,8 +163,9 @@ class App extends Component {
             activeIndex={this.state.activeIndex}
             activeMessages={this.state.activeMessages}
             user={this.state.user}
-            createMessage={(e, message) => this.createMessage(e, message)}
-            deleteSingleMessage={(e, message) => this.deleteSingleMessage(e, message)}
+            createMessage={(message) => this.createMessage(message)}
+            deleteSingleMessage={(message) => this.deleteSingleMessage(message)}
+            editMessage={(message) => this.editMessage(message)}
           />
           <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
         </main>
