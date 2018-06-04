@@ -30,6 +30,11 @@ class MessageList extends Component {
     this.props.deleteSingleMessage(message);
   }
 
+  formatTime(time) {
+    let myDate = new Date(time);
+    return myDate.toDateString() + ' @ ' + myDate.getHours() + ':' + myDate.getMinutes();
+  }
+
   render() {
     return (
       <section className="messageList">
@@ -37,8 +42,12 @@ class MessageList extends Component {
         {
           this.props.activeMessages.map( (message, index) =>
             <div className="message" key={index}>
-              {message.content}
-              <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(message)}></input>
+              <span className="user">{message.user}</span>
+              <span className="time">{this.formatTime(message.sentAt)}</span>
+              <div className="content">
+                {message.content}
+                <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(message)}></input>
+              </div>
             </div>
           )
         }

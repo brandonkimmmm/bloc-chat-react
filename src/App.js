@@ -44,12 +44,9 @@ class App extends Component {
     this.messagesRef.on('child_removed', snapshot => {
       let messageArr = this.state.messages;
       messageArr = messageArr.filter( message => {
-        console.log(snapshot.key);
-        console.log(message.key);
         return snapshot.key !== message.key;
       });
       this.setState({ messages: messageArr });
-      console.log(messageArr);
     });
   }
 
@@ -87,6 +84,13 @@ class App extends Component {
            itemSnapshot.ref.remove();
        });
     });
+
+    // CLEAR MESSAGE ARRAY OF MESSAGES FROM THIS ROOM
+    let newMessages = this.state.messages;
+    newMessages = newMessages.filter( message => {
+      return message.roomId !== key;
+    })
+    this.setState({ messages: newMessages });
 
     //IF ACTIVE ROOM IS DELETED, CLEAR THE ACTIVE MESSAGES
     if(key === this.state.activeIndex) {
