@@ -43,8 +43,13 @@ class App extends Component {
 
     this.messagesRef.on('child_removed', snapshot => {
       let messageArr = this.state.messages;
-      messageArr = messageArr.filter( message => snapshot.val().roomId !== message.roomId );
+      messageArr = messageArr.filter( message => {
+        console.log(snapshot.key);
+        console.log(message.key);
+        return snapshot.key !== message.key;
+      });
       this.setState({ messages: messageArr });
+      console.log(messageArr);
     });
   }
 
@@ -89,6 +94,10 @@ class App extends Component {
     }
   }
 
+  deleteSingleMessage(message) {
+    this.messagesRef.child(message.key).remove();
+  }
+
   render() {
     return (
       <div className="App">
@@ -109,7 +118,9 @@ class App extends Component {
             activeRoom={this.state.activeRoom}
             activeIndex={this.state.activeIndex}
             activeMessages={this.state.activeMessages}
+            user={this.state.user}
             createMessage={(e, message) => this.createMessage(e, message)}
+            deleteSingleMessage={(e, message) => this.deleteSingleMessage(e, message)}
           />
           <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
         </main>

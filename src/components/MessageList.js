@@ -18,6 +18,18 @@ class MessageList extends Component {
     this.setState({ newMessage: event.target.value });
   }
 
+  deleteMessage(message) {
+    if(this.props.user !== null && this.props.user.displayName !== message.user) {
+      alert("Need to be room creator");
+      return;
+
+    } else if (this.props.user === null && message.user !== 'Guest') {
+      alert("Need to be room creator");
+      return;
+    }
+    this.props.deleteSingleMessage(message);
+  }
+
   render() {
     return (
       <section className="messageList">
@@ -26,6 +38,7 @@ class MessageList extends Component {
           this.props.activeMessages.map( (message, index) =>
             <div className="message" key={index}>
               {message.content}
+              <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(message)}></input>
             </div>
           )
         }
