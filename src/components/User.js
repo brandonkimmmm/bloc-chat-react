@@ -25,9 +25,21 @@ class User extends Component {
   render() {
     return (
       <section className="authentication">
-        { this.props.user === null ? 'Guest' : this.props.user.displayName }
-        <input type="button" value="Sign-In" onClick={() => this.signIn()}></input>
-        <input type="button" value="Sign-Out" onClick={() => this.signOut()}></input>
+        <table>
+          <tbody>
+            <tr>
+              <td>
+                { this.props.user === null ? 'Guest' : this.props.user.displayName }
+              </td>
+              <td>
+                <input type="button" value="Sign-In" onClick={() => this.signIn()}></input>
+              </td>
+              <td>
+                <input type="button" value="Sign-Out" onClick={() => this.signOut()}></input>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </section>
     )
   }

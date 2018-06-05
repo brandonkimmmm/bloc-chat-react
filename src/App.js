@@ -145,10 +145,8 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <header>
+        <section className="leftSide">
           <h1>Bloc Chat</h1>
-        </header>
-        <main>
           <RoomList
             firebase={ firebase }
             activeRoom={this.state.activeRoom}
@@ -157,6 +155,9 @@ class App extends Component {
             changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
             deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
           />
+          <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
+        </section>
+        <main>
           <MessageList
             firebase={ firebase }
             activeRoom={this.state.activeRoom}
@@ -167,7 +168,6 @@ class App extends Component {
             deleteSingleMessage={(message) => this.deleteSingleMessage(message)}
             editMessage={(message) => this.editMessage(message)}
           />
-          <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
         </main>
       </div>
     );

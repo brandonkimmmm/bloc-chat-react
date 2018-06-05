@@ -111,15 +111,25 @@ class RoomList extends Component {
   render() {
     return (
       <section className="roomList">
-        {
-          this.state.rooms.map( (room, index) =>
-            <div className="room" key={index}>
-              <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
-              <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.user, room.key)}></input>
-              <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
-            </div>
-          )
-        }
+        <table className="rooms">
+          <tbody>
+            {
+              this.state.rooms.map( (room, index) =>
+                <tr className="room" key={index}>
+                  <td>
+                    <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
+                  </td>
+                  <td>
+                    <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.user, room.key)}></input>
+                  </td>
+                  <td>
+                    <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
         <form className="roomForm" onSubmit={ (e) => this.createRoom(e) }>
           <input className="newRoomName" type="text" placeholder="Enter New Room Name" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></input>
           <input type="submit" value="Submit"></input>
