@@ -37,6 +37,7 @@ main {
 
 .roomList {
   padding-left: 10px;
+  margin-bottom: 65px;
 }
 
 .roomName:hover {
@@ -70,6 +71,7 @@ main {
   width: 65%;
   position: absolute;
   border-collapse: collapse;
+  margin-bottom: 40px;
 }
 
 .messageForm {
