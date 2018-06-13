@@ -20,12 +20,12 @@ class MessageList extends Component {
 
   deleteMessage(e, message) {
     e.preventDefault();
-    if(this.props.user !== null && this.props.user.displayName !== message.user) {
-      alert("Need to be room creator");
+    if((this.props.user !== null && this.props.user.displayName !== message.user) && !this.props.isAdmin) {
+      alert("Need to be message creator");
       return;
 
-    } else if (this.props.user === null && message.user !== 'Guest') {
-      alert("Need to be room creator");
+    } else if ((this.props.user === null && message.user !== 'Guest') && !this.props.isAdmin) {
+      alert("Need to be message creator");
       return;
     }
     this.props.deleteSingleMessage(message);
@@ -38,11 +38,11 @@ class MessageList extends Component {
 
   editMessage(e, message) {
     e.preventDefault();
-    if(this.props.user !== null && this.props.user.displayName !== message.user) {
+    if((this.props.user !== null && this.props.user.displayName !== message.user) && !this.props.isAdmin) {
       alert("Need to be message creator");
       return;
 
-    } else if (this.props.user === null && message.user !== 'Guest') {
+    } else if ((this.props.user === null && message.user !== 'Guest') && !this.props.isAdmin) {
       alert("Need to be messages creator");
       return;
     }

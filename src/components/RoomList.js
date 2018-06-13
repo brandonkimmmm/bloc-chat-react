@@ -59,11 +59,11 @@ class RoomList extends Component {
   }
 
   deleteRoom(room) {
-    if(this.props.user !== null && this.props.user.displayName !== room.user) {
+    if((this.props.user !== null && this.props.user.displayName !== room.user) && !this.props.isAdmin) {
       alert("Need to be room creator");
       return;
 
-    } else if (this.props.user === null && room.user !== 'Guest') {
+    } else if ((this.props.user === null && room.user !== 'Guest') && !this.props.isAdmin) {
       alert("Need to be room creator");
       return;
     }
@@ -76,10 +76,10 @@ class RoomList extends Component {
 
   renameRoom(e, user, key) {
     e.preventDefault();
-    if (this.props.user !== null && user !== this.props.user.displayName) {
+    if ((this.props.user !== null && user !== this.props.user.displayName) && !this.props.isAdmin) {
       alert('Need to be room creator');
       return;
-    } else if (this.props.user === null && user !== 'Guest') {
+    } else if ((this.props.user === null && user !== 'Guest') && !this.props.isAdmin) {
       alert('Need to be room creator');
       return;
     }

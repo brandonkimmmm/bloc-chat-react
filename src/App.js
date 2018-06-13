@@ -26,6 +26,7 @@ class App extends Component {
       messages: [],
       activeMessages:[],
       user: null,
+      isAdmin: false
     }
 
     this.messagesRef = firebase.database().ref('messages');
@@ -58,6 +59,10 @@ class App extends Component {
 
   setUser(user) {
     this.setState({ user: user });
+  }
+
+  setAuth(bool) {
+    this.setState({isAdmin: bool})
   }
 
   createMessage(message) {
@@ -110,10 +115,10 @@ class App extends Component {
   }
 
   editMessage(message) {
-    if (this.state.user !== null && message.user !== this.state.user.displayName) {
+    if ((this.state.user !== null && message.user !== this.state.user.displayName) && !this.state.isAdmin) {
       alert('Need to be message creator');
       return;
-    } else if (this.state.user === null && message.user !== 'Guest') {
+    } else if ((this.state.user === null && message.user !== 'Guest') && !this.state.isAdmin) {
       alert('Need to be message creator');
       return;
     }
@@ -152,10 +157,16 @@ class App extends Component {
             activeRoom={this.state.activeRoom}
             activeIndex={this.state.activeIndex}
             user={this.state.user}
+            isAdmin={this.state.isAdmin}
             changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
             deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
           />
-          <User firebase={ firebase } user={this.state.user} setUser={(user) => this.setUser(user)} />
+          <User
+            firebase={ firebase }
+            user={this.state.user}
+            setUser={(user) => this.setUser(user)}
+            setAuth={(bool) => this.setAuth(bool)}
+          />
         </section>
         <main>
           <MessageList
@@ -164,6 +175,7 @@ class App extends Component {
             activeIndex={this.state.activeIndex}
             activeMessages={this.state.activeMessages}
             user={this.state.user}
+            isAdmin={this.state.isAdmin}
             createMessage={(message) => this.createMessage(message)}
             deleteSingleMessage={(message) => this.deleteSingleMessage(message)}
             editMessage={(message) => this.editMessage(message)}
