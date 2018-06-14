@@ -20,7 +20,7 @@ class MessageList extends Component {
 
   deleteMessage(e, message) {
     e.preventDefault();
-    if((this.props.user !== null && this.props.user.displayName !== message.user) && !this.props.isAdmin) {
+    if((this.props.user !== null && this.props.user.email !== message.userEmail) && !this.props.isAdmin) {
       alert("Need to be message creator");
       return;
 
@@ -38,7 +38,7 @@ class MessageList extends Component {
 
   editMessage(e, message) {
     e.preventDefault();
-    if((this.props.user !== null && this.props.user.displayName !== message.user) && !this.props.isAdmin) {
+    if((this.props.user !== null && this.props.user.email !== message.userEmail) && !this.props.isAdmin) {
       alert("Need to be message creator");
       return;
 

@@ -33,6 +33,7 @@ class RoomList extends Component {
     // If Admin, ask if admin wants room to be private
     let password = null;
     let privateRoom = false;
+    let email = null;
     if(this.props.isAdmin) {
       privateRoom = window.confirm("Make Private?");
       if (privateRoom) {
@@ -53,13 +54,15 @@ class RoomList extends Component {
       user = 'Guest';
     } else {
       user = this.props.user.displayName;
+      email = this.props.user.email;
     }
     // Push new room into database
     let newRoomName = this.state.newRoom;
     this.roomsRef.push({
       name: newRoomName,
       user: user,
-      password: password
+      password: password,
+      userEmail: email
     });
     // Get key of new created room
     let key = '';
@@ -123,7 +126,7 @@ class RoomList extends Component {
   }
 
   deleteRoom(room) {
-    if((this.props.user !== null && this.props.user.displayName !== room.user) && !this.props.isAdmin) {
+    if((this.props.user !== null && this.props.user.email !== room.userEmail) && !this.props.isAdmin) {
       alert("Need to be room creator");
       return;
 
@@ -140,7 +143,7 @@ class RoomList extends Component {
 
   renameRoom(e, user, key) {
     e.preventDefault();
-    if ((this.props.user !== null && user !== this.props.user.displayName) && !this.props.isAdmin) {
+    if ((this.props.user !== null && user !== this.props.user.email) && !this.props.isAdmin) {
       alert('Need to be room creator');
       return;
     } else if ((this.props.user === null && user !== 'Guest') && !this.props.isAdmin) {
@@ -184,7 +187,7 @@ class RoomList extends Component {
                     <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
                   </td>
                   <td>
-                    <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.user, room.key)}></input>
+                    <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}></input>
                   </td>
                   <td>
                     <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>

@@ -68,14 +68,17 @@ class App extends Component {
   createMessage(message) {
     if (!message) { return }
     let activeUser = '';
+    let email = null;
     if (this.state.user === null) {
       activeUser = 'Guest';
     } else {
       activeUser = this.state.user.displayName;
+      email = this.state.user.email;
     }
     this.messagesRef.push({
       content: message,
       user: activeUser,
+      userEmail: email,
       roomId: this.state.activeIndex,
       sentAt: firebase.database.ServerValue.TIMESTAMP
     })
@@ -115,7 +118,7 @@ class App extends Component {
   }
 
   editMessage(message) {
-    if ((this.state.user !== null && message.user !== this.state.user.displayName) && !this.state.isAdmin) {
+    if ((this.state.user !== null && message.userEmail !== this.state.user.email) && !this.state.isAdmin) {
       alert('Need to be message creator');
       return;
     } else if ((this.state.user === null && message.user !== 'Guest') && !this.state.isAdmin) {
