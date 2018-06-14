@@ -25,28 +25,56 @@ class RoomList extends Component {
 
   createRoom(e) {
     e.preventDefault();
+    // If user enters a blank form, ask for valid name
     if(!this.state.newRoom) {
       alert('Enter Valid Name');
-      return
+      return;
     }
+    // If Admin, ask if admin wants room to be private
+    let password = null;
+    let privateRoom = false;
+    if(this.props.isAdmin) {
+      privateRoom = window.confirm("Make Private?");
+      if (privateRoom) {
+        // Make password for new room
+        password = prompt("Enter Password");
+        while (password === '') {
+          password = prompt("Enter Valid Password");
+          // If user cancels entering password, don't make private room
+          if (password === null) {
+            privateRoom = false;
+          }
+        }
+      }
+    }
+    // If no user is signed in, room creator is Guest.
     let user = '';
     if(this.props.user === null) {
       user = 'Guest';
     } else {
       user = this.props.user.displayName;
     }
+    // Push new room into database
     let newRoomName = this.state.newRoom;
     this.roomsRef.push({
       name: newRoomName,
-      user: user
+      user: user,
+      password: password
     });
-
+    // Get key of new created room
     let key = '';
     let newRoom = this.roomsRef.orderByChild("name").equalTo(newRoomName);
-    console.log(newRoomName);
     newRoom.once('value', snapshot => {
       key = Object.keys(snapshot.val())[0];
+      // If private room, make creator an authorized user
+      if (privateRoom) {
+        let query = this.props.firebase.database().ref('rooms/' + key + '/authUsers');
+        query.push({
+          email: this.props.user.email
+        })
+      }
     });
+    // Set active room to new created room
     this.props.changeActiveRoom(this.state.newRoom, key);
   }
 
@@ -55,7 +83,43 @@ class RoomList extends Component {
   }
 
   handleClick(name, key) {
-    this.props.changeActiveRoom(name, key);
+    let password = '';
+    let isAuthUser = false;
+    let authUsersArr = undefined;
+    this.roomsRef.orderByKey().equalTo(key).on('value', snapshot => {
+      password = Object.values(snapshot.val())[0].password;
+      authUsersArr = Object.values(snapshot.val())[0].authUsers;
+      if (authUsersArr !== undefined) {
+        authUsersArr = Object.values(authUsersArr);
+        authUsersArr.map(user => {
+          if (this.props.user !== null && this.props.user.email === user.email) {
+            isAuthUser = true;
+          }
+        })
+      }
+    })
+    let checkPassword = '';
+    if ((password !== undefined && this.props.user !== null) && !isAuthUser) {
+      checkPassword = prompt("Enter Password");
+      if (password === checkPassword) {
+        alert("Now authorized user");
+        let query = this.props.firebase.database().ref('rooms/' + key + '/authUsers');
+        query.push({
+          email: this.props.user.email
+        })
+      }
+    }
+    if (checkPassword === null || (password !== undefined && password !== checkPassword && !isAuthUser)) {
+      if (this.props.user === null) {
+        alert("Must be signed in");
+        return;
+      } else {
+        alert("Must be an authorized user");
+        return;
+      }
+    } else{
+      this.props.changeActiveRoom(name, key);
+    }
   }
 
   deleteRoom(room) {
