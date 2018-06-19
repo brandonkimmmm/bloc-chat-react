@@ -14,6 +14,7 @@ class User extends Component {
       this.props.setUser(user);
       if (user === null) {return}
       let isAdmin = false;
+      // Check to see if signed in user is in authUsers database, make admin
       this.authUsersRef.orderByChild("email").once("value", snapshot => {
         snapshot.forEach(x => {
           if (user.email === x.val().email) {
@@ -39,14 +40,17 @@ class User extends Component {
       newEmail = result.user.email;
       query.once("value", function(snapshot) {
         snapshot.forEach(x => {
+          // If signed in user's email is in authUsers database, make admin
           if (result.user.email === x.val().email) {
             adminCheck = true;
           }
         })
+        // If singed in user is a new user and not in authUsers database, ask to enter admin code
         if (result.additionalUserInfo.isNewUser && !adminCheck) {
           adminPrompt = prompt("Enter Admin Code");
         }
       }).then( () => {
+        // If answer is not null or a wrong password, add user to authUsers database and make admin
         if (adminPrompt === authCode) {
           this.authUsersRef.push({
             email: newEmail

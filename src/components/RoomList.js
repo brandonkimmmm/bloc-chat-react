@@ -13,11 +13,14 @@ class RoomList extends Component {
   }
 
   componentDidMount() {
+    // Update rooms array when a new room is added to database
     this.roomsRef.on('child_added', snapshot => {
       const room = snapshot.val();
       room.key = snapshot.key;
       this.setState({ rooms: this.state.rooms.concat( room ), newRoom: "" });
     });
+
+    // Update rooms array when room is deleted from database
     this.roomsRef.on('child_removed', snapshot => {
       this.setState({ rooms: this.state.rooms.filter( room => snapshot.key !== room.key )});
     })
@@ -48,7 +51,8 @@ class RoomList extends Component {
         }
       }
     }
-    // If no user is signed in, room creator is Guest.
+
+    // If no user is signed in, room creator is Guest. Else, associate user with room
     let user = '';
     if(this.props.user === null) {
       user = 'Guest';
@@ -89,9 +93,11 @@ class RoomList extends Component {
     let password = '';
     let isAuthUser = false;
     let authUsersArr = undefined;
+    // Check to see if clicked room is private and has authorized users
     this.roomsRef.orderByKey().equalTo(key).on('value', snapshot => {
       password = Object.values(snapshot.val())[0].password;
       authUsersArr = Object.values(snapshot.val())[0].authUsers;
+      // If there are authorized users and active user is an authorized user, set isAuthUser to true
       if (authUsersArr !== undefined) {
         authUsersArr = Object.values(authUsersArr);
         authUsersArr.map(user => {
@@ -102,16 +108,19 @@ class RoomList extends Component {
       }
     })
     let checkPassword = '';
+    // If there is a password and user is signed in but not admin, tell user to enter password
     if ((password !== undefined && this.props.user !== null) && !isAuthUser) {
       checkPassword = prompt("Enter Password");
       if (password === checkPassword) {
         alert("Now authorized user");
+        // If user enters correct password, user is added to authorized user database for room and doesn't have to enter password again
         let query = this.props.firebase.database().ref('rooms/' + key + '/authUsers');
         query.push({
           email: this.props.user.email
         })
       }
     }
+    // If user cancels entering password or enters wrong password, don't let them in
     if (checkPassword === null || (password !== undefined && password !== checkPassword && !isAuthUser)) {
       if (this.props.user === null) {
         alert("Must be signed in");
@@ -120,22 +129,26 @@ class RoomList extends Component {
         alert("Must be an authorized user");
         return;
       }
-    } else{
+    } else {
+    // If password is undefined (doesn't exist), change active room
       this.props.changeActiveRoom(name, key);
     }
   }
 
   deleteRoom(room) {
+    // If user is signed in, not an admin, and is not creator of room, can't delete
     if((this.props.user !== null && this.props.user.email !== room.userEmail) && !this.props.isAdmin) {
       alert("Need to be room creator");
       return;
 
+    // If user isn't signed in and room creator isn't guest, can't delete
     } else if ((this.props.user === null && room.user !== 'Guest') && !this.props.isAdmin) {
       alert("Need to be room creator");
       return;
     }
     this.props.deleteRoomMessages(room.key);
     this.roomsRef.child(room.key).remove();
+    // If active room is deleted, change active room to nothing and display 'Please Select Room'
     if (room.key === this.props.activeIndex) {
       this.props.changeActiveRoom('Please Select Room', '');
     }
@@ -143,6 +156,7 @@ class RoomList extends Component {
 
   renameRoom(e, user, key) {
     e.preventDefault();
+    // Check to see if user is creator of room or is admin
     if ((this.props.user !== null && user !== this.props.user.email) && !this.props.isAdmin) {
       alert('Need to be room creator');
       return;

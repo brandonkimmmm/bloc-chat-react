@@ -33,15 +33,19 @@ class App extends Component {
   }
 
   componentDidMount() {
+    // Populate message array when new message is added to database
     this.messagesRef.on('child_added', snapshot => {
       const message = snapshot.val();
       message.key = snapshot.key;
+      // concat new message into existing array
       this.setState({ messages: this.state.messages.concat( message ) });
+      // if new message is added to active room, update the activeMessages array
       if (message.roomId == this.state.activeIndex) {
         this.setState({ activeMessages: this.state.activeMessages.concat( message ) });
       }
     });
 
+    // Update message array when message is deleted from database
     this.messagesRef.on('child_removed', snapshot => {
       let messageArr = this.state.messages;
       messageArr = messageArr.filter( message => {
@@ -51,24 +55,30 @@ class App extends Component {
     });
   }
 
+  // Change active room when new room is clicked
   changeActiveRoom(name, key) {
     this.setState({ activeRoom: name, activeIndex: key });
+    //select messages with the key of new, selected room and update activeMessages
     const arr = this.state.messages.filter( message => message.roomId == key );
     this.setState({ activeMessages: arr });
   }
 
+  // Set user when someone signs in
   setUser(user) {
     this.setState({ user: user });
   }
 
+  // Set true if the user is an authorized admin
   setAuth(bool) {
     this.setState({isAdmin: bool})
   }
 
   createMessage(message) {
+    // If no value is given, return from the function
     if (!message) { return }
     let activeUser = '';
     let email = null;
+    // If there is no user signed in, message creator is Guest and email stays null
     if (this.state.user === null) {
       activeUser = 'Guest';
     } else {
@@ -84,8 +94,10 @@ class App extends Component {
     })
   }
 
+  // Delete all messages from room when room is deleted
   deleteRoomMessages(key) {
     var query = this.messagesRef.orderByChild("roomId").equalTo(key);
+    // Find all messages with room key and delete from array
     query.once("value", function(snapshot) {
        snapshot.forEach(function(itemSnapshot) {
            itemSnapshot.ref.remove();
@@ -118,9 +130,11 @@ class App extends Component {
   }
 
   editMessage(message) {
+    // If no user is signed in, user isn't an admin, and user email is not the same as creator's email, can't edit message
     if ((this.state.user !== null && message.userEmail !== this.state.user.email) && !this.state.isAdmin) {
       alert('Need to be message creator');
       return;
+    // if user is not signed in and creator isn't a guest or user isn't an admin, can't edit message
     } else if ((this.state.user === null && message.user !== 'Guest') && !this.state.isAdmin) {
       alert('Need to be message creator');
       return;
@@ -141,6 +155,7 @@ class App extends Component {
     query.once('child_added', snapshot => {
       snapshot.ref.update({ content: editedMessage })
     });
+    // Update message array
     let updatedMessages = this.state.messages.map( newMessage => {
       if (newMessage.key === message.key) {
         newMessage.content = editedMessage;
