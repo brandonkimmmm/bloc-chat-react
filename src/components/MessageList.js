@@ -10,7 +10,7 @@ class MessageList extends Component {
 
   createMessage(e, message) {
     e.preventDefault();
-    this.props.createMessage(e, message);
+    this.props.createMessage(message);
     this.setState({ newMessage: '' });
   }
 
@@ -18,13 +18,14 @@ class MessageList extends Component {
     this.setState({ newMessage: event.target.value });
   }
 
-  deleteMessage(message) {
-    if(this.props.user !== null && this.props.user.displayName !== message.user) {
-      alert("Need to be room creator");
+  deleteMessage(e, message) {
+    e.preventDefault();
+    if((this.props.user !== null && this.props.user.email !== message.userEmail) && !this.props.isAdmin) {
+      alert("Need to be message creator");
       return;
 
-    } else if (this.props.user === null && message.user !== 'Guest') {
-      alert("Need to be room creator");
+    } else if ((this.props.user === null && message.user !== 'Guest') && !this.props.isAdmin) {
+      alert("Need to be message creator");
       return;
     }
     this.props.deleteSingleMessage(message);
@@ -35,28 +36,56 @@ class MessageList extends Component {
     return myDate.toDateString() + ' @ ' + myDate.getHours() + ':' + myDate.getMinutes();
   }
 
+  editMessage(e, message) {
+    e.preventDefault();
+    if((this.props.user !== null && this.props.user.email !== message.userEmail) && !this.props.isAdmin) {
+      alert("Need to be message creator");
+      return;
+
+    } else if ((this.props.user === null && message.user !== 'Guest') && !this.props.isAdmin) {
+      alert("Need to be messages creator");
+      return;
+    }
+    this.props.editMessage(message);
+  }
+
   render() {
     return (
       <section className="messageList">
-        {this.props.activeRoom}
-        {
-          this.props.activeMessages.map( (message, index) =>
-            <div className="message" key={index}>
-              <span className="user">{message.user}</span>
-              <span className="time">{this.formatTime(message.sentAt)}</span>
-              <div className="content">{message.content}</div>
-              <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(message)}></input>
-            </div>
-          )
+        <h1>{this.props.activeRoom}</h1>
+        <table className="messages">
+          <tbody>
+            {
+              this.props.activeMessages.map( (message, index) =>
+                <tr className="message" key={index}>
+                  <td>
+                    <div className="messageInfo">
+                      <span className="user">{message.user}</span>
+                      <span className="time">{this.formatTime(message.sentAt)}</span>
+                    </div>
+                    <div className="content">
+                      {message.content}
+                      <span className="messageButtons">
+                        <input className="renameButton" type='button' value='Edit' onClick={(e) => this.editMessage(e, message)}></input>
+                        <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(e, message)}></input>
+                      </span>
+                    </div>
+                  </td>
+                </tr>
+              )
+            }
+          </tbody>
+        </table>
+        {this.props.activeIndex !== '' &&
+          <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
+            <input className="newMessage"
+              type="text"
+              placeholder="Enter your message"
+              value={this.state.newMessage}
+              onChange={ (e) => this.handleChange(e) }></input>
+            <input className="messageSubmit" type="submit" value="Submit"></input>
+          </form>
         }
-        <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
-          <input className="newMessage"
-            type="text"
-            placeholder="Enter your message"
-            value={this.state.newMessage}
-            onChange={ (e) => this.handleChange(e) }></input>
-          <input type="submit" value="Submit"></input>
-        </form>
       </section>
     )
   }
