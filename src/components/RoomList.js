@@ -1,4 +1,5 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
 
 class RoomList extends Component {
@@ -191,31 +192,27 @@ class RoomList extends Component {
 
   render() {
     return (
-      <section className="roomList">
-        <table className="rooms">
-          <tbody>
-            {
-              this.state.rooms.map( (room, index) =>
-                <tr className="room" key={index}>
-                  <td>
-                    <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
-                  </td>
-                  <td>
-                    <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}></input>
-                  </td>
-                  <td>
-                    <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
-                  </td>
-                </tr>
-              )
-            }
-          </tbody>
-        </table>
+      <Fragment>
+          {
+            this.state.rooms.map( (room, index) =>
+              <ListItem key={index}>
+                <ListItemText>
+                  <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
+                </ListItemText>
+                <ListItemText>
+                  <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}></input>
+                </ListItemText>
+                <ListItemText>
+                  <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
+                </ListItemText>
+              </ListItem>
+            )
+          }
         <form className="roomForm" onSubmit={ (e) => this.createRoom(e) }>
           <input className="newRoomName" type="text" placeholder="Enter New Room Name" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></input>
           <input type="submit" value="Submit"></input>
         </form>
-      </section>
+      </Fragment>
     )
   }
 }
