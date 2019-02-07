@@ -4,6 +4,7 @@ import * as firebase from 'firebase';
 import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
 import User from './components/User';
+import { Grid } from '@material-ui/core';
 
 
 // Initialize Firebase
@@ -168,37 +169,38 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <section className="leftSide">
-          <h1>Bloc Chat</h1>
-          <RoomList
-            firebase={ firebase }
-            activeRoom={this.state.activeRoom}
-            activeIndex={this.state.activeIndex}
-            user={this.state.user}
-            isAdmin={this.state.isAdmin}
-            changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
-            deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
-          />
-          <User
-            firebase={ firebase }
-            user={this.state.user}
-            setUser={(user) => this.setUser(user)}
-            setAuth={(bool) => this.setAuth(bool)}
-          />
-        </section>
-        <main>
-          <MessageList
-            firebase={ firebase }
-            activeRoom={this.state.activeRoom}
-            activeIndex={this.state.activeIndex}
-            activeMessages={this.state.activeMessages}
-            user={this.state.user}
-            isAdmin={this.state.isAdmin}
-            createMessage={(message) => this.createMessage(message)}
-            deleteSingleMessage={(message) => this.deleteSingleMessage(message)}
-            editMessage={(message) => this.editMessage(message)}
-          />
-        </main>
+        <Grid container>
+          <Grid item md={3} xs={12}>
+            <RoomList
+                firebase={ firebase }
+                activeRoom={this.state.activeRoom}
+                activeIndex={this.state.activeIndex}
+                user={this.state.user}
+                isAdmin={this.state.isAdmin}
+                changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
+                deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
+              />
+              <User
+                firebase={ firebase }
+                user={this.state.user}
+                setUser={(user) => this.setUser(user)}
+                setAuth={(bool) => this.setAuth(bool)}
+              />
+            </Grid>
+          <Grid item md={9} xs={12}>
+            <MessageList
+                firebase={ firebase }
+                activeRoom={this.state.activeRoom}
+                activeIndex={this.state.activeIndex}
+                activeMessages={this.state.activeMessages}
+                user={this.state.user}
+                isAdmin={this.state.isAdmin}
+                createMessage={(message) => this.createMessage(message)}
+                deleteSingleMessage={(message) => this.deleteSingleMessage(message)}
+                editMessage={(message) => this.editMessage(message)}
+              />
+          </Grid>
+        </Grid>
       </div>
     );
   }

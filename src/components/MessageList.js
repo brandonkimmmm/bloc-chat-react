@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 class MessageList extends Component {
   constructor(props) {
@@ -51,7 +51,7 @@ class MessageList extends Component {
 
   render() {
     return (
-      <section className="messageList">
+      <Fragment>
         <h1>{this.props.activeRoom}</h1>
         <table className="messages">
           <tbody>
@@ -86,7 +86,7 @@ class MessageList extends Component {
             <input className="messageSubmit" type="submit" value="Submit"></input>
           </form>
         }
-      </section>
+      </Fragment>
     )
   }
 }
