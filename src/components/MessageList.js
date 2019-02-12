@@ -1,4 +1,23 @@
 import React, { Component, Fragment } from 'react';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+import { List, ListItem, ListItemText, Button, Typography } from '@material-ui/core';
+
+const styles = theme => ({
+  root: {
+    width: '100%',
+    // maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+    minHeight: '500px',
+    '&root:nth-child(2)': {
+      background: 'red'
+    }
+  },
+  date: {
+    // width: '100%'
+    textAlign: 'right'
+  }
+});
 
 class MessageList extends Component {
   constructor(props) {
@@ -50,32 +69,22 @@ class MessageList extends Component {
   }
 
   render() {
+    const {classes} = this.props;
     return (
       <Fragment>
-        <h1>{this.props.activeRoom}</h1>
-        <table className="messages">
-          <tbody>
-            {
-              this.props.activeMessages.map( (message, index) =>
-                <tr className="message" key={index}>
-                  <td>
-                    <div className="messageInfo">
-                      <span className="user">{message.user}</span>
-                      <span className="time">{this.formatTime(message.sentAt)}</span>
-                    </div>
-                    <div className="content">
-                      {message.content}
-                      <span className="messageButtons">
-                        <input className="renameButton" type='button' value='Edit' onClick={(e) => this.editMessage(e, message)}></input>
-                        <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteMessage(e, message)}></input>
-                      </span>
-                    </div>
-                  </td>
-                </tr>
-              )
-            }
-          </tbody>
-        </table>
+        <Typography variant="h4" style={{marginTop: '10px'}}>{this.props.activeRoom}</Typography>
+        <List className={classes.root}>
+          {
+            this.props.activeMessages.map( (message, index) =>
+              <ListItem key={index}>
+                <ListItemText secondary={message.content} primary={message.user} />
+                <ListItemText className={classes.date} primary={this.formatTime(message.sentAt)} />
+                  <Button size="small" variant="outlined" color="inherit" onClick={(e) => this.editMessage(e, message)}>Edit</Button>
+                  <Button size="small" style={{marginLeft: '5px'}} variant="outlined" color="secondary" onClick={(e) => this.deleteMessage(e, message)}>Delete</Button>
+              </ListItem>
+            )
+          }
+        </List>
         {this.props.activeIndex !== '' &&
           <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
             <input className="newMessage"
@@ -91,4 +100,8 @@ class MessageList extends Component {
   }
 }
 
-export default MessageList;
+MessageList.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(MessageList);
