@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { List, ListItem, ListItemText, Typography, Button, Paper, FormControl, InputLabel, Input } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography, Button, FormControl, InputLabel, Input } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -7,7 +7,6 @@ const styles = theme => ({
   root: {
     width: '100%',
     minWidth: '250px',
-    // maxWidth: '350px',
     height: '100%',
     backgroundColor: '#FFF9C4',
   },
@@ -220,7 +219,6 @@ class RoomList extends Component {
               <InputLabel htmlFor="roomname">Enter new room name and press enter</InputLabel>
               <Input type="text" id="roomname" name="roomname" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></Input>
             </FormControl>
-            {/* <input type="submit" value="Submit"></input> */}
           </form>
           <List component="nav">
             {

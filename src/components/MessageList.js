@@ -1,21 +1,28 @@
 import React, { Component, Fragment } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
-import { List, ListItem, ListItemText, Button, Typography } from '@material-ui/core';
+import { List, ListItem, ListItemText, Button, Typography, FormControl, InputLabel, Input } from '@material-ui/core';
 
 const styles = theme => ({
   root: {
     width: '100%',
-    // maxWidth: 360,
     backgroundColor: theme.palette.background.paper,
     minHeight: '500px',
-    '&root:nth-child(2)': {
-      background: 'red'
-    }
+    maxHeight: '100%',
+    // '%root:last-child': {
+    //   marginBottom: '65px',
+    // }
   },
   date: {
-    // width: '100%'
     textAlign: 'right'
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    position: 'fixed',
+    left: 0,
+    bottom: 0,
+    // backgroundColor: theme.palette.background.paper,
+    marginLeft: '25%',
   }
 });
 
@@ -72,11 +79,11 @@ class MessageList extends Component {
     const {classes} = this.props;
     return (
       <Fragment>
-        <Typography variant="h4" style={{marginTop: '10px'}}>{this.props.activeRoom}</Typography>
         <List className={classes.root}>
+          <Typography variant="h4" style={{marginTop: '15px', marginLeft: '10px'}}>{this.props.activeRoom}</Typography>
           {
             this.props.activeMessages.map( (message, index) =>
-              <ListItem key={index}>
+              <ListItem className="item" key={index}>
                 <ListItemText secondary={message.content} primary={message.user} />
                 <ListItemText className={classes.date} primary={this.formatTime(message.sentAt)} />
                   <Button size="small" variant="outlined" color="inherit" onClick={(e) => this.editMessage(e, message)}>Edit</Button>
@@ -86,13 +93,16 @@ class MessageList extends Component {
           }
         </List>
         {this.props.activeIndex !== '' &&
-          <form className="messageForm" onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
-            <input className="newMessage"
-              type="text"
-              placeholder="Enter your message"
-              value={this.state.newMessage}
-              onChange={ (e) => this.handleChange(e) }></input>
-            <input className="messageSubmit" type="submit" value="Submit"></input>
+          <form className={classes.form} onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="roomname" align="center"></InputLabel>
+              <Input type="text"
+                id="newmessage"
+                name="newmessage"
+                value={this.state.newMessage}
+                onChange={ (e) => this.handleChange(e) }>
+              </Input>
+            </FormControl>
           </form>
         }
       </Fragment>

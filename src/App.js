@@ -25,6 +25,17 @@ const styles = theme => ({
     height: '100%',
     paddingTop: '56px'
   },
+  roomList: {
+    display: 'flex',
+    overflow: 'auto',
+    minHeight: '100%'
+  },
+  messageList: {
+    display: 'flex',
+    overflow: 'auto',
+    minHeight: '100%',
+    paddingBottom: '64px',
+  }
 });
 
 class App extends Component {
@@ -186,7 +197,7 @@ class App extends Component {
           setAuth={(bool) => this.setAuth(bool)}
         />
         <Grid container className={classes.app}>
-          <Grid item md={3} xs={12}>
+          <Grid item className={classes.roomList} md={3} xs={12}>
             <RoomList
                 firebase={ firebase }
                 activeRoom={this.state.activeRoom}
@@ -197,7 +208,7 @@ class App extends Component {
                 deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
               />
             </Grid>
-          <Grid item md={9} xs={12}>
+          <Grid item className={classes.messageList} md={9} xs={12}>
             <MessageList
                 firebase={ firebase }
                 activeRoom={this.state.activeRoom}
