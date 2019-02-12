@@ -6,7 +6,7 @@ import { withStyles } from '@material-ui/core/styles';
 const styles = {
   button: {
     marginLeft: '10px'
-  }
+  },
 };
 
 class User extends Component {
@@ -79,24 +79,23 @@ class User extends Component {
     const { classes } = this.props;
     if(!this.props.user) {
       return (
-        <Button className={classes.button} color="inherit" size="small" onClick={() => this.signIn()}>Sign In</Button>
+        <Button className={classes.button} color="inherit" onClick={() => this.signIn()}>Sign In</Button>
       )
     } else {
       return (
-        <Button className={classes.button} color="secondary" variant="contained" size="small" onClick={() => this.signOut()}>Sign Out</Button>
+        <Button className={classes.button} color="secondary" variant="contained" onClick={() => this.signOut()}>Sign Out</Button>
       )
     }
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <Fragment>
         <Typography variant="h6" color="inherit">
           { this.props.user === null ? 'Guest' : this.props.user.displayName }
         </Typography>
-        <Typography variant="h6" color="inherit">
           {this.showButton()}
-        </Typography>
       </Fragment>
     )
   }

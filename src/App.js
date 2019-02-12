@@ -5,7 +5,7 @@ import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
 import User from './components/User';
 import { Grid } from '@material-ui/core';
-import AppBar from './components/NavBar';
+import NavBar from './components/NavBar';
 
 
 // Initialize Firebase
@@ -170,7 +170,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <AppBar
+        <NavBar
           firebase={ firebase }
           user={this.state.user}
           setUser={(user) => this.setUser(user)}
@@ -187,12 +187,6 @@ class App extends Component {
                 changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
                 deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
               />
-              {/* <User
-                firebase={ firebase }
-                user={this.state.user}
-                setUser={(user) => this.setUser(user)}
-                setAuth={(bool) => this.setAuth(bool)}
-              /> */}
             </Grid>
           <Grid item md={9} xs={12}>
             <MessageList
