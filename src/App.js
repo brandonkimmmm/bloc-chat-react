@@ -170,7 +170,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <AppBar />
+        <AppBar
+          firebase={ firebase }
+          user={this.state.user}
+          setUser={(user) => this.setUser(user)}
+          setAuth={(bool) => this.setAuth(bool)}
+        />
         <Grid container>
           <Grid item md={3} xs={12}>
             <RoomList
@@ -182,12 +187,12 @@ class App extends Component {
                 changeActiveRoom={(name, key) => this.changeActiveRoom(name, key)}
                 deleteRoomMessages={(key) => this.deleteRoomMessages(key)}
               />
-              <User
+              {/* <User
                 firebase={ firebase }
                 user={this.state.user}
                 setUser={(user) => this.setUser(user)}
                 setAuth={(bool) => this.setAuth(bool)}
-              />
+              /> */}
             </Grid>
           <Grid item md={9} xs={12}>
             <MessageList

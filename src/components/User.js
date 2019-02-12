@@ -1,4 +1,13 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
+import { Button, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
+
+const styles = {
+  button: {
+    marginLeft: '10px'
+  }
+};
 
 class User extends Component {
   constructor(props) {
@@ -66,27 +75,35 @@ class User extends Component {
     this.props.firebase.auth().signOut();
   }
 
+  showButton() {
+    const { classes } = this.props;
+    if(!this.props.user) {
+      return (
+        <Button className={classes.button} color="inherit" size="small" onClick={() => this.signIn()}>Sign In</Button>
+      )
+    } else {
+      return (
+        <Button className={classes.button} color="secondary" variant="contained" size="small" onClick={() => this.signOut()}>Sign Out</Button>
+      )
+    }
+  }
+
   render() {
     return (
-      <section className="authentication">
-        <table>
-          <tbody>
-            <tr>
-              <td>
-                { this.props.user === null ? 'Guest' : this.props.user.displayName }
-              </td>
-              <td>
-                <input type="button" value="Sign-In" onClick={() => this.signIn()}></input>
-              </td>
-              <td>
-                <input type="button" value="Sign-Out" onClick={() => this.signOut()}></input>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
+      <Fragment>
+        <Typography variant="h6" color="inherit">
+          { this.props.user === null ? 'Guest' : this.props.user.displayName }
+        </Typography>
+        <Typography variant="h6" color="inherit">
+          {this.showButton()}
+        </Typography>
+      </Fragment>
     )
   }
 }
 
-export default User;
+User.propTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default withStyles(styles)(User);

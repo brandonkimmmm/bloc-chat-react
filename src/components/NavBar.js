@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -7,6 +7,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+import User from './User';
 
 const styles = {
     root: {
@@ -17,20 +18,33 @@ const styles = {
     }
 };
 
-function NavBar(props) {
-    const { classes } = props;
-    return (
-        <div className={classes.root}>
-            <AppBar position="static">
-                <Toolbar>
-                    <Typography variant="h6" color="inherit" className={classes.grow}>
-                        Chatty
-                    </Typography>
-                    <Button color="inherit">Login</Button>
-                </Toolbar>
-            </AppBar>
-        </div>
-    );
+class NavBar extends Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+        }
+    }
+
+    render() {
+        const { classes } = this.props;
+        return (
+            <div className={classes.root}>
+                <AppBar position="static">
+                    <Toolbar>
+                        <Typography variant="h6" color="inherit" className={classes.grow}>
+                            Chatty
+                        </Typography>
+                        <User
+                            firebase={ this.props.firebase }
+                            user={this.props.user}
+                            setUser={(user) => this.props.setUser(user)}
+                            setAuth={(bool) => this.props.setAuth(bool)}
+                        />
+                    </Toolbar>
+                </AppBar>
+            </div>
+        );
+    }
 }
 
 NavBar.propTypes = {
