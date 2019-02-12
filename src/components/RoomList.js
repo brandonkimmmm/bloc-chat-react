@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography, Button } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -220,12 +220,8 @@ class RoomList extends Component {
                       {room.name}
                     </Typography>
                   </ListItemText>
-                  <ListItemText>
-                    <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}></input>
-                  </ListItemText>
-                  <ListItemText>
-                    <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
-                  </ListItemText>
+                  <Button type='button' variant="contained" size="small" color="inherit" onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}>Rename</Button>
+                  <Button type="button" style={{marginLeft: '5px'}} size="small" variant="contained" color="secondary" onClick={(e) => this.deleteRoom(room)}>Delete</Button>
                 </ListItem>
               )
             }
