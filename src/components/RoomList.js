@@ -1,6 +1,23 @@
 import React, { Component, Fragment } from 'react';
-import { List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
+const styles = theme => ({
+  root: {
+    width: '100%',
+    minWidth: '250px',
+    // maxWidth: '350px',
+    height: '100%',
+    backgroundColor: '#FFF9C4',
+  },
+  name: {
+    cursor: 'pointer',
+    '&:hover': {
+      backgroundColor: 'white'
+    }
+  }
+});
 
 class RoomList extends Component {
   constructor(props) {
@@ -191,30 +208,39 @@ class RoomList extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
-      <Fragment>
-          {
-            this.state.rooms.map( (room, index) =>
-              <ListItem key={index}>
-                <ListItemText>
-                  <span className="roomName" onClick={(e) => this.handleClick(room.name, room.key)}>{room.name}</span>
-                </ListItemText>
-                <ListItemText>
-                  <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}></input>
-                </ListItemText>
-                <ListItemText>
-                  <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
-                </ListItemText>
-              </ListItem>
-            )
-          }
-        <form className="roomForm" onSubmit={ (e) => this.createRoom(e) }>
-          <input className="newRoomName" type="text" placeholder="Enter New Room Name" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></input>
-          <input type="submit" value="Submit"></input>
-        </form>
-      </Fragment>
+        <div className={classes.root}>
+          <List component="nav">
+            {
+              this.state.rooms.map( (room, index) =>
+                <ListItem key={index}>
+                  <ListItemText className={classes.name} onClick={(e) => this.handleClick(room.name, room.key)}>
+                    <Typography variant="h6">
+                      {room.name}
+                    </Typography>
+                  </ListItemText>
+                  <ListItemText>
+                    <input className="renameButton" type='button' value='Rename' onClick={(e) => this.renameRoom(e, room.userEmail, room.key)}></input>
+                  </ListItemText>
+                  <ListItemText>
+                    <input className="deleteButton" type="button" value="Delete" onClick={(e) => this.deleteRoom(room)}></input>
+                  </ListItemText>
+                </ListItem>
+              )
+            }
+          </List>
+          <form className="roomForm" onSubmit={ (e) => this.createRoom(e) }>
+            <input className="newRoomName" type="text" placeholder="Enter New Room Name" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></input>
+            <input type="submit" value="Submit"></input>
+          </form>
+        </div>
     )
   }
 }
 
-export default RoomList;
+RoomList.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(RoomList);

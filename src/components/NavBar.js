@@ -29,7 +29,7 @@ class NavBar extends Component {
         const { classes } = this.props;
         return (
             <div className={classes.root}>
-                <AppBar position="static">
+                <AppBar style={{ margin: 0 }}>
                     <Toolbar>
                         <Typography variant="h6" color="inherit" className={classes.grow}>
                             Chatty

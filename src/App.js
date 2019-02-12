@@ -6,7 +6,8 @@ import MessageList from './components/MessageList';
 import User from './components/User';
 import { Grid } from '@material-ui/core';
 import NavBar from './components/NavBar';
-
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
 // Initialize Firebase
 var config = {
@@ -18,6 +19,13 @@ var config = {
   messagingSenderId: "170103426822"
 };
 firebase.initializeApp(config);
+
+const styles = theme => ({
+  app: {
+    height: '100%',
+    paddingTop: '64px'
+  },
+});
 
 class App extends Component {
   constructor(props) {
@@ -168,6 +176,7 @@ class App extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div className="App">
         <NavBar
@@ -176,7 +185,7 @@ class App extends Component {
           setUser={(user) => this.setUser(user)}
           setAuth={(bool) => this.setAuth(bool)}
         />
-        <Grid container>
+        <Grid container className={classes.app}>
           <Grid item md={3} xs={12}>
             <RoomList
                 firebase={ firebase }
@@ -207,4 +216,8 @@ class App extends Component {
   }
 }
 
-export default App;
+App.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(App);
