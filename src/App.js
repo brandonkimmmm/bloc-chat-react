@@ -5,6 +5,7 @@ import RoomList from './components/RoomList';
 import MessageList from './components/MessageList';
 import User from './components/User';
 import { Grid } from '@material-ui/core';
+import AppBar from './components/NavBar';
 
 
 // Initialize Firebase
@@ -169,6 +170,7 @@ class App extends Component {
   render() {
     return (
       <div className="App">
+        <AppBar />
         <Grid container>
           <Grid item md={3} xs={12}>
             <RoomList
