@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { List, ListItem, ListItemText, Typography, Button } from '@material-ui/core';
+import { List, ListItem, ListItemText, Typography, Button, Paper, FormControl, InputLabel, Input } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 
@@ -16,6 +16,10 @@ const styles = theme => ({
     '&:hover': {
       backgroundColor: 'white'
     }
+  },
+  form: {
+    width: '100%', // Fix IE 11 issue.
+    marginTop: theme.spacing.unit,
   }
 });
 
@@ -211,6 +215,13 @@ class RoomList extends Component {
     const { classes } = this.props;
     return (
         <div className={classes.root}>
+          <form className={classes.form} onSubmit={ (e) => this.createRoom(e) }>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="roomname">Enter new room name and press enter</InputLabel>
+              <Input type="text" id="roomname" name="roomname" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></Input>
+            </FormControl>
+            {/* <input type="submit" value="Submit"></input> */}
+          </form>
           <List component="nav">
             {
               this.state.rooms.map( (room, index) =>
@@ -226,10 +237,6 @@ class RoomList extends Component {
               )
             }
           </List>
-          <form className="roomForm" onSubmit={ (e) => this.createRoom(e) }>
-            <input className="newRoomName" type="text" placeholder="Enter New Room Name" value={this.state.newRoom} onChange={ (e) => this.handleChange(e) }></input>
-            <input type="submit" value="Submit"></input>
-          </form>
         </div>
     )
   }

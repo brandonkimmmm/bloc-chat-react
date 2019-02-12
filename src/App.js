@@ -23,7 +23,7 @@ firebase.initializeApp(config);
 const styles = theme => ({
   app: {
     height: '100%',
-    paddingTop: '64px'
+    paddingTop: '56px'
   },
 });
 
