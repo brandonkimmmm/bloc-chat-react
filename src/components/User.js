@@ -67,6 +67,8 @@ class User extends Component {
           this.props.setAuth(true);
         }
       })
+    }, (error) => {
+      console.log(error);
     });
   }
 
