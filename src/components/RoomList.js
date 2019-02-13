@@ -8,12 +8,13 @@ const styles = theme => ({
     width: '100%',
     minWidth: '250px',
     height: '100%',
-    backgroundColor: '#FFF9C4',
+    backgroundColor: theme.palette.background.paper,
   },
   name: {
     cursor: 'pointer',
     '&:hover': {
-      backgroundColor: 'white'
+      border: '5px solid #FFF59D',
+      borderRadius: '5px'
     }
   },
   form: {

@@ -23,7 +23,8 @@ firebase.initializeApp(config);
 const styles = theme => ({
   app: {
     height: '100%',
-    paddingTop: '56px'
+    paddingTop: '56px',
+    paddingBottom: '64px'
   },
   roomList: {
     display: 'flex',

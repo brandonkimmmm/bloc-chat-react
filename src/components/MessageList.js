@@ -6,7 +6,6 @@ import { List, ListItem, ListItemText, Button, Typography, FormControl, InputLab
 const styles = theme => ({
   root: {
     width: '100%',
-    backgroundColor: theme.palette.background.paper,
     minHeight: '500px',
     maxHeight: '100%',
     // '%root:last-child': {
@@ -21,7 +20,7 @@ const styles = theme => ({
     position: 'fixed',
     left: 0,
     bottom: 0,
-    // backgroundColor: theme.palette.background.paper,
+    // backgroundColor: '#FFF9C4',
     marginLeft: '25%',
   }
 });
@@ -95,7 +94,7 @@ class MessageList extends Component {
         {this.props.activeIndex !== '' &&
           <form className={classes.form} onSubmit={ (e, message) => this.createMessage(e, this.state.newMessage) }>
             <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="roomname" align="center"></InputLabel>
+              <InputLabel htmlFor="roomname" align="center">Write message and hit enter</InputLabel>
               <Input type="text"
                 id="newmessage"
                 name="newmessage"
